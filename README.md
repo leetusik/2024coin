@@ -4,4 +4,4 @@
 
 ###
 
-![hi](images/Screenshot 2024-08-17 at 2.24.41 AM.png?raw=true "title")
+![hi](images/hi.png)
