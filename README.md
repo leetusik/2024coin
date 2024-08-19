@@ -60,7 +60,7 @@ if high(t) > target(t) & pred(t) > close(t):
 
 #### 1.6 연구 결과 성과 분석을 위한 성과 지표
 
-![p_i](images/performance_indiators.png)
+![p_i](images/performance_indicators.png)
 
 #### 1.? 궁금증
 
