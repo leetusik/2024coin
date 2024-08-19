@@ -164,3 +164,4 @@ cython_debug/
 # Additional ignore
 reference
 results
+.csv
