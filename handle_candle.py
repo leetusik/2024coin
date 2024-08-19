@@ -24,8 +24,13 @@ def get_candles(
     market="KRW-BTC",
     count="200",
     start="2024-01-01 01:00:00",
+    interval2="1",
 ):
-    times = get_time_intervals(start)
+    times = get_time_intervals(
+        initial_time_str=start,
+        interval=interval,
+        interval2=interval2,
+    )
     if len(times) == 1:
         # Get the current time
         current_time = str(datetime.now(timezone.utc))
@@ -43,7 +48,7 @@ def get_candles(
     rate_limit_interval = 1 / 40  # Time in seconds to wait between requests
 
     for t in times:
-        url = f"https://api.upbit.com/v1/candles/{interval}/1?market={market}&count={count}&to={t}"
+        url = f"https://api.upbit.com/v1/candles/{interval}/{interval2}?market={market}&count={count}&to={t}"
 
         headers = {"accept": "application/json"}
 
@@ -89,7 +94,7 @@ def get_candles(
     return df_selected
 
 
-def get_time_intervals(initial_time_str):
+def get_time_intervals(initial_time_str, interval, interval2):
     # Convert the initial time string to a datetime object
     initial_time = datetime.strptime(initial_time_str, "%Y-%m-%d %H:%M:%S")
     initial_time = initial_time - timedelta(hours=9)
@@ -102,10 +107,21 @@ def get_time_intervals(initial_time_str):
     # Initialize an empty list to store the times
     time_intervals = []
 
-    # Generate times in 3-hour intervals until the current time
-    while initial_time <= current_time:
-        time_intervals.append(initial_time.strftime("%Y-%m-%d %H:%M:%S"))
-        initial_time += timedelta(hours=3, minutes=20)
+    if interval == "minutes":
+        # Generate times in 3-hour intervals until the current time
+        if interval2 == "1":
+            while initial_time <= current_time:
+                time_intervals.append(initial_time.strftime("%Y-%m-%d %H:%M:%S"))
+                initial_time += timedelta(hours=3, minutes=20)
+        elif interval2 == "60":
+            while initial_time <= current_time:
+                time_intervals.append(initial_time.strftime("%Y-%m-%d %H:%M:%S"))
+                initial_time += timedelta(hours=200)
+    elif interval == "hours":
+        # Generate times in 200-hour intervals until the current time
+        while initial_time <= current_time:
+            time_intervals.append(initial_time.strftime("%Y-%m-%d %H:%M:%S"))
+            initial_time += timedelta(hours=200)
 
     time_intervals.append(current_time.strftime("%Y-%m-%d %H:%M:%S"))
     # time_intervals = list(set(time_intervals))
@@ -114,4 +130,5 @@ def get_time_intervals(initial_time_str):
     return time_intervals
 
 
-print(get_candles(start="2024-08-15 18:30:00"))
+df = get_candles(start="2021-04-01 00:00:00", interval="minutes", interval2="60")
+df.to_csv("total_hours.csv")
