@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def get_rounded(number):
     return round(number * 100, 2)
 
@@ -16,6 +19,12 @@ def get_cagr(total_return, days):
 def get_mdd(values):
     peak = values[0]
     max_drawdown = 0
+
+    # Check if peak is NaN
+    temp = 1
+    while np.isnan(peak):
+        peak = values[temp]
+        temp += 1
 
     for value in values:
         if value > peak:
@@ -37,3 +46,29 @@ def print_things(strategy="None", round=True, **kwargs):
         for key, value in kwargs.items():
             print(f"{key:<15} : {value}")
     print("=" * 30)
+
+
+def get_performance(df, title):
+    # get total return
+    initial_value = df["cumulative_returns"].iloc[1]
+    final_value = df["cumulative_returns"].iloc[-1]
+    tr = get_total_return(
+        inital_value=initial_value,
+        final_value=final_value,
+    )
+
+    # get cagr
+    days = len(df)
+    cagr = get_cagr(total_return=tr, days=days)
+
+    # get mdd
+    balance = df["cumulative_returns"]
+    mdd = get_mdd(balance)
+
+    # print things
+    print_things(
+        strategy=title,
+        total_return=tr,
+        cagr=cagr,
+        mdd=mdd,
+    )

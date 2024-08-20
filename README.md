@@ -112,7 +112,37 @@ DOI : 10.1016/j.physa.2019.121950
 
 <!-- ![hi](images/hi.png) -->
 
-### 3. 기술적 지표 + 다이버전스 + 프라이스액션?
+### 3. RSI 연구들
+
+기본적으로 rsi는 다음과 같이 구해진다.
+
+```python
+# Calculate the RS (Relative Strength) and RSI
+df['rs'] = df['avg_gain'] / df['avg_loss']
+df['rsi'] = 100 - (100 / (1 + df['rs']))
+```
+
+그리고 매수, 매도 조건은 다음과 같다.
+
+```python
+df['signal'] = 0  # Default to no position
+for i in range(1, len(df)):
+    # 매수 조건
+    if (df['rsi'].iloc[i] >= 30) and (df['rsi'].iloc[i-1] < 30):
+        df['signal'].iloc[i] = 1
+    # 매도 조건
+    elif (df['rsi'].iloc[i] <= 70) and (df['rsi'].iloc[i-1] > 70):
+        df['signal'].iloc[i] = -1
+```
+
+직전 rsi가 30이하에서 30을 돌파할 때 매수 조건이 충족된다. 그리고
+
+#### 3.1 RSI(2) 전략 - systrader79 2017
+
+Larry Connor - How Markets Really Work 에서 나온 방법.
+
+> 매수 조건 : 가격 > 200일 이평선 + 가격 < 5일 이평선 + RSI(2) < 5
+> 매도 조건 : 가격 > 5일 이평선
 
 #### 3.1 분석할만한 지표?
 
@@ -131,12 +161,11 @@ DOI : 10.1016/j.physa.2019.121950
 1. 기술적 지표 전략들
 
    1. rsi
-   2. macd
-   3. ma
-   4. momentum
-   5. hash rate
-   6. 변동성 돌파
-   7. 키워드 검색량
+   2. ma - ma, , macd, ema, ma riboon,
+   3. momentum
+   4. hash rate
+   5. 변동성 돌파
+   6. 키워드 검색량
 
 2. 머신러닝 전략들
 
@@ -151,6 +180,56 @@ DOI : 10.1016/j.physa.2019.121950
 
 4. 혼합 전략
 
+### 1.1 rsi 전략들
+
+#### 1.1.1 기본 RSI
+
+======Investment Summary======
+Strategy : rsi_basic
+total_return : 110.37
+cagr : 24.54
+mdd : 64.22
+==============================.
+
+#### 1.1.2 기본 RSI + stop loss with entry
+
+======Investment Summary======
+Strategy : rsi_basic_cut
+total_return : 177.79
+cagr : 35.18
+mdd : 41.2
+==============================.
+
+#### 1.1.3 기본 RSI + stop loss with highest balance
+
+======Investment Summary======
+Strategy : rsi_basic_cut
+total_return : 286.32
+cagr : 49.0
+mdd : 28.6
+==============================.
+
+#### 1.1.2 RSI(2)
+
+======Investment Summary======
+Strategy : rsi(2)
+total_return : -27.16
+cagr : -8.93
+mdd : 48.39
+==============================.
+
+#### 1.1.? 추세추종 rsi (rsi 역매매)
+
+======Investment Summary======
+Strategy : RSI_REVERSE
+total_return : 49.35
+cagr : 12.57
+mdd : 44.99
+==============================.
+
+#### 1.1.? 추세추종 rsi 손절 추가(rsi 역매매)
+
 ## ideas
 
 - 하루의 기준 -> 평균 거래량이 가장 적은 시간대가 적당하지 않을까?
+- 시드가 많으면 꼭 정시가 아니라 10분, 1분 단위로 쪼개서 전략 실행해도 괜찮겠다.
