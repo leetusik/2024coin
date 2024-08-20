@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import numpy as np
 
 
@@ -41,7 +42,10 @@ def print_things(strategy="None", round=True, **kwargs):
     print(f"{'Strategy':<15} : {strategy}")
     if round:
         for key, value in kwargs.items():
-            print(f"{key:<15} : {get_rounded(value)}")
+            if type(value) != float:
+                print(f"{key:<15} : {value}")
+            else:
+                print(f"{key:<15} : {get_rounded(value)}")
     else:
         for key, value in kwargs.items():
             print(f"{key:<15} : {value}")
@@ -57,9 +61,17 @@ def get_performance(df, title):
         final_value=final_value,
     )
 
-    # get cagr
-    days = len(df)
+    # # get cagr
+    # days = len(df)
+
+    # Calculate the number of days from the first signal to the last day in the DataFrame
+    # Find the first day where a position is taken (signal == 1)
+    first_signal_day = df[df["signal"] == 1].index[0]
+
+    # Calculate the number of days from the first signal to the last day in the DataFrame
+    days = len(df) - first_signal_day
     cagr = get_cagr(total_return=tr, days=days)
+    # print(len(df), first_signal_day, days)
 
     # get mdd
     balance = df["cumulative_returns"]
@@ -71,4 +83,22 @@ def get_performance(df, title):
         total_return=tr,
         cagr=cagr,
         mdd=mdd,
+        investing_days=days,
     )
+
+
+def draw_graph(df):
+    # Plot the cumulative returns
+    plt.figure(figsize=(14, 7))
+    plt.plot(df["cumulative_returns"], label="Strategy Cumulative Returns")
+    plt.plot(
+        df["benchmark_returns"],
+        label="Benchmark (Buy and Hold) Cumulative Returns",
+        linestyle="--",
+    )
+    plt.title("Cumulative Returns of the Trading Strategy")
+    plt.xlabel("Date")
+    plt.ylabel("Cumulative Returns")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
