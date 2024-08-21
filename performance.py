@@ -70,21 +70,51 @@ def get_performance(df, title):
 
     # Calculate the number of days from the first signal to the last day in the DataFrame
     days = len(df) - first_signal_day
-    cagr = get_cagr(total_return=tr, days=days)
+    cagr = get_cagr(
+        total_return=tr,
+        days=days,
+    )
     # print(len(df), first_signal_day, days)
 
     # get mdd
     balance = df["cumulative_returns"]
     mdd = get_mdd(balance)
 
-    # print things
-    print_things(
-        strategy=title,
-        total_return=tr,
-        cagr=cagr,
-        mdd=mdd,
-        investing_days=days,
-    )
+    try:
+        initial_value2 = df["cumulative_returns2"].iloc[1]
+        final_value2 = df["cumulative_returns2"].iloc[-1]
+        tr2 = get_total_return(
+            inital_value=initial_value2,
+            final_value=final_value2,
+        )
+
+        cagr2 = get_cagr(
+            total_return=tr2,
+            days=days,
+        )
+
+        balance2 = df["cumulative_returns2"]
+        mdd2 = get_mdd(balance2)
+
+        print_things(
+            strategy=title,
+            total_return=tr,
+            cagr=cagr,
+            mdd=mdd,
+            total_return_w_fee=tr2,
+            cagr_w_fee=cagr2,
+            mdd_w_fee=mdd2,
+            investing_days=days,
+        )
+
+    except:
+        print_things(
+            strategy=title,
+            total_return=tr,
+            cagr=cagr,
+            mdd=mdd,
+            investing_days=days,
+        )
 
 
 def draw_graph(df):
