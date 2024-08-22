@@ -189,7 +189,6 @@ Strategy : rsi_basic
 total_return : 110.37
 cagr : 24.54
 mdd : 64.22
-==============================.
 
 #### 1.1.2 기본 RSI + stop loss with entry
 
@@ -198,7 +197,6 @@ Strategy : rsi_basic_cut
 total_return : 177.79
 cagr : 35.18
 mdd : 41.2
-==============================.
 
 #### 1.1.3 기본 RSI + stop loss with highest balance
 
@@ -207,7 +205,6 @@ Strategy : rsi_basic_cut
 total_return : 286.32
 cagr : 49.0
 mdd : 28.6
-==============================.
 
 #### 1.1.2 RSI(2)
 
@@ -216,7 +213,6 @@ Strategy : rsi(2)
 total_return : -27.16
 cagr : -8.93
 mdd : 48.39
-==============================.
 
 #### 1.1.? 추세추종 rsi (rsi 역매매)
 
@@ -225,9 +221,226 @@ Strategy : RSI_REVERSE
 total_return : 49.35
 cagr : 12.57
 mdd : 44.99
-==============================.
 
 #### 1.1.? 추세추종 rsi 손절 추가(rsi 역매매)
+
+### 1.2 이동평균선 전략들
+
+#### 1.2.1 simple moving average(no slipage) - no fee
+
+======Investment Summary======
+Strategy : ma_5
+total_return : 150.28
+cagr : 38.11
+mdd : 44.8
+
+investing_days : 1037
+======Investment Summary======
+Strategy : ma_10
+total_return : 87.0
+cagr : 24.65
+mdd : 38.3
+
+investing_days : 1037
+======Investment Summary======
+Strategy : ma_20
+total_return : 104.39
+cagr : 28.61
+mdd : 43.8
+
+investing_days : 1037
+======Investment Summary======
+Strategy : ma_50
+total_return : 109.17
+cagr : 29.66
+mdd : 42.2
+
+investing_days : 1037
+======Investment Summary======
+Strategy : ma_90
+total_return : 56.29
+cagr : 17.02
+mdd : 44.2
+
+investing_days : 1037
+======Investment Summary======
+Strategy : ma_120
+total_return : 66.8
+cagr : 19.73
+mdd : 42.4
+
+investing_days : 1037
+======Investment Summary======
+Strategy : ma_200
+total_return : 100.91
+cagr : 27.83
+mdd : 29.3
+
+investing_days : 1037
+
+#### 1.2.2 simple moving average - with stop loss(entry price) - no fee
+
+======Investment Summary======
+Strategy : ma_5_cut
+total_return : 143.93
+cagr : 37.2
+mdd : 44.8
+
+investing_days : 1029
+======Investment Summary======
+Strategy : ma_10_cut
+total_return : 88.58
+cagr : 25.24
+mdd : 37.5
+
+investing_days : 1029
+======Investment Summary======
+Strategy : ma_20_cut
+total_return : 114.78
+cagr : 31.29
+mdd : 40.0
+
+investing_days : 1025
+======Investment Summary======
+Strategy : ma_50_cut
+total_return : 118.84
+cagr : 32.98
+mdd : 34.8
+
+investing_days : 1003
+======Investment Summary======
+Strategy : ma_90_cut
+total_return : 90.56
+cagr : 30.62
+mdd : 33.5
+
+investing_days : 881
+======Investment Summary======
+Strategy : ma_120_cut
+total_return : 103.38
+cagr : 34.33
+mdd : 28.5
+
+investing_days : 878
+======Investment Summary======
+Strategy : ma_200_cut
+total_return : 162.81
+cagr : 84.27
+mdd : 22.4
+
+investing_days : 577
+
+#### 1.2.3 SMA - with stop loss(highest price) - fee ok
+
+======Investment Summary======
+Strategy : ma_5_cut_highest
+total_return : 143.93
+cagr : 37.2
+mdd : 44.8
+
+total_return_w_fee : 47.36
+cagr_w_fee : 14.74
+mdd_w_fee : 55.76
+investing_days : 1029
+======Investment Summary======
+Strategy : ma_10_cut_highest
+total_return : 103.48
+cagr : 28.66
+mdd : 32.6
+
+total_return_w_fee : 49.54
+cagr_w_fee : 15.34
+mdd_w_fee : 41.09
+investing_days : 1029
+======Investment Summary======
+Strategy : ma_20_cut_highest
+total_return : 159.16
+cagr : 40.37
+mdd : 29.
+
+total_return_w_fee : 112.19
+cagr_w_fee : 30.72
+mdd_w_fee : 36.15
+investing_days : 1025
+======Investment Summary======
+Strategy : ma_50_cut_highest
+total_return : 156.02
+cagr : 40.79
+mdd : 24.5
+
+total_return_w_fee : 133.52
+cagr_w_fee : 36.16
+mdd_w_fee : 27.39
+investing_days : 1003
+======Investment Summary======
+Strategy : ma_90_cut_highest
+total_return : 93.38
+cagr : 31.42
+mdd : 28.1
+
+total_return_w_fee : 77.09
+cagr_w_fee : 26.72
+mdd_w_fee : 30.29
+investing_days : 881
+======Investment Summary======
+Strategy : ma_120_cut_highest
+total_return : 19.46
+cagr : 7.67
+mdd : 24.3
+
+total_return_w_fee : 11.61
+cagr_w_fee : 4.67
+mdd_w_fee : 26.31
+investing_days : 878
+======Investment Summary======
+Strategy : ma_200_cut_highest
+total_return : 50.3
+cagr : 29.4
+mdd : 13.3
+
+total_return_w_fee : 46.15
+cagr_w_fee : 27.13
+mdd_w_fee : 15.09
+investing_days : 577
+
+#### 1.2.4 MACD
+
+======Investment Summary======
+Strategy : macd_basic
+total_return : 107.6
+cagr : 24.76
+mdd : 50.9
+
+total_return_w_fee : 74.1
+cagr_w_fee : 18.29
+mdd_w_fee : 54.27
+investing_days : 1205
+
+#### 1.2.5 MACD - with stop loss(entry price)
+
+======Investment Summary======
+Strategy : macd_cut_entry
+total_return : 140.4
+cagr : 30.43
+mdd : 47.7
+
+total_return_w_fee : 101.6
+cagr_w_fee : 23.66
+mdd_w_fee : 51.28
+investing_days : 1205
+
+#### 1.2.6 MACD - with stop loss(highest price)
+
+======Investment Summary======
+Strategy : macd_cut_highest
+total_return : 152.97
+cagr : 32.46
+mdd : 36.2
+
+total_return_w_fee : 112.14
+cagr_w_fee : 25.59
+mdd_w_fee : 40.48
+investing_days : 1205
 
 ## ideas
 
