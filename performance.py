@@ -42,7 +42,8 @@ def print_things(strategy="None", round=True, **kwargs):
     print(f"{'Strategy':<15} : {strategy}")
     if round:
         for key, value in kwargs.items():
-            if type(value) != float:
+            if type(value) != float and type(value) != np.float64:
+                # print(f"{key} is not a float. It's {type(value)}")
                 print(f"{key:<15} : {value}")
             else:
                 print(f"{key:<15} : {get_rounded(value)}")
