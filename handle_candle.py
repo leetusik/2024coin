@@ -45,7 +45,7 @@ def get_candles(
         count = int(total_minutes)
 
     lst = []
-    rate_limit_interval = 1 / 40  # Time in seconds to wait between requests
+    rate_limit_interval = 1 / 20  # Time in seconds to wait between requests
 
     for t in times:
         url = f"https://api.upbit.com/v1/candles/{interval}/{interval2}?market={market}&count={count}&to={t}"
@@ -130,5 +130,5 @@ def get_time_intervals(initial_time_str, interval, interval2):
     return time_intervals
 
 
-df = get_candles(start="2021-04-01 00:00:00", interval="minutes", interval2="60")
-df.to_csv("total_hours.csv")
+df = get_candles(start="2020-01-01 00:00:00", interval="minutes", interval2="60")
+df.to_csv("total_2_hours.csv")

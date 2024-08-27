@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 
 def get_rounded(number):
@@ -53,7 +54,7 @@ def print_things(strategy="None", round=True, **kwargs):
     print("=" * 30)
 
 
-def get_performance(df, title):
+def get_performance(df, title, add_to_excel=False, file_path=None):
     # get total return
     initial_value = df["cumulative_returns"].iloc[1]
     final_value = df["cumulative_returns"].iloc[-1]
@@ -108,6 +109,15 @@ def get_performance(df, title):
             investing_days=days,
         )
 
+        if add_to_excel:
+            new_data = {
+                "strategy_name": title,
+                "cagr": get_rounded(cagr2),
+                "mdd": get_rounded(mdd2),
+                "investing_days": days,
+            }
+            add_row_to_excel(file_path=file_path, new_data=new_data)
+
     except:
         print_things(
             strategy=title,
@@ -121,7 +131,10 @@ def get_performance(df, title):
 def draw_graph(df):
     # Plot the cumulative returns
     plt.figure(figsize=(14, 7))
-    plt.plot(df["cumulative_returns"], label="Strategy Cumulative Returns")
+    try:
+        plt.plot(df["cumulative_returns2"], label="Strategy Cumulative Returns")
+    except:
+        plt.plot(df["cumulative_returns"], label="Strategy Cumulative Returns")
     plt.plot(
         df["benchmark_returns"],
         label="Benchmark (Buy and Hold) Cumulative Returns",
@@ -133,3 +146,26 @@ def draw_graph(df):
     plt.legend()
     plt.grid(True)
     plt.show()
+
+
+def add_row_to_excel(file_path, new_data):
+    """
+    Adds a new row to an existing Excel file with the specified columns.
+
+    :param file_path: Path to the existing Excel file.
+    :param new_data: A dictionary containing the new row data.
+                        The keys should be 'name', 'cagr', 'mdd', and 'investing_days'.
+    """
+    # Load the existing Excel file
+    try:
+        df = pd.read_excel(file_path, engine="openpyxl")
+    except FileNotFoundError:
+        # If the file doesn't exist, create an empty DataFrame with the correct columns
+        df = pd.DataFrame(columns=["strategy_name", "cagr", "mdd", "investing_days"])
+
+    # Convert new_data to a DataFrame and concatenate it with the existing DataFrame
+    new_row_df = pd.DataFrame([new_data])
+    df = pd.concat([df, new_row_df], ignore_index=True)
+
+    # Save back to the Excel file
+    df.to_excel(file_path, index=False, engine="openpyxl")
