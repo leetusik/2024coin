@@ -39,10 +39,12 @@ def get_candles(
         start_time = datetime.strptime(start, "%Y-%m-%d %H:%M:%S")
         start_time = start_time - timedelta(hours=9)
         time_difference = current_time - start_time
+        # print(time_difference)
 
         # Convert the time difference to total minutes
-        total_minutes = time_difference.total_seconds() // 60 + 1
+        total_minutes = time_difference.total_seconds() // 3600 + 1
         count = int(total_minutes)
+        # print(count)
 
     lst = []
     rate_limit_interval = 1 / 20  # Time in seconds to wait between requests
@@ -77,7 +79,7 @@ def get_candles(
         "candle_acc_trade_price",
         "candle_acc_trade_volume",
     ]
-    df_selected = df[selected_columns]
+    df_selected = df[selected_columns].copy()
 
     df_selected.rename(
         columns={
@@ -130,5 +132,6 @@ def get_time_intervals(initial_time_str, interval, interval2):
     return time_intervals
 
 
-df = get_candles(start="2020-01-01 00:00:00", interval="minutes", interval2="60")
-df.to_csv("total_2_hours.csv")
+# df = get_candles(start="2024-08-22 04:00:00", interval="minutes", interval2="60")
+# print(df)
+# df.to_csv("total_2_hours.csv")
