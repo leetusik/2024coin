@@ -1,6 +1,10 @@
+import os
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from openpyxl import Workbook, load_workbook
+from openpyxl.utils.dataframe import dataframe_to_rows
 
 
 def get_rounded(number):
@@ -169,3 +173,257 @@ def add_row_to_excel(file_path, new_data):
 
     # Save back to the Excel file
     df.to_excel(file_path, index=False, engine="openpyxl")
+
+
+def logging_on_excel_ma(file_path, new_data, dashboard_data):
+    # Check if the Excel file exists
+    if not os.path.exists(file_path):
+        # If the file doesn't exist, create it with two sheets
+        with pd.ExcelWriter(file_path, engine="openpyxl") as writer:
+            # Create a DataFrame for the dashboard with the required rows and columns
+            dashboard_df = pd.DataFrame(
+                dashboard_data,
+                index=[
+                    "Total Return",
+                    "CAGR",
+                    "MDD",
+                    "Holding Days",
+                    "Investing Days",
+                ],
+                columns=["Theoretical", "Real", "Benchmark"],
+            )
+            # Create an empty DataFrame for the logs with the required columns
+            logs_df = pd.DataFrame(
+                columns=[
+                    "date",
+                    "open_price",
+                    "ma",
+                    "signal",
+                    "position",
+                    "buy_price",
+                    "sell_price",
+                    # "strategy_buy_price",
+                    # "strategy_sell_price",
+                    # "strategy_highest_price",
+                    # "real_buy_price",
+                    # "real_sell_price",
+                    # "real_highest_price",
+                    # "strategy_returns",
+                    # "strategy_cumulative_returns",
+                    # "strategy_mdd",
+                    # "real_returns",
+                    # "real_cumulative_returns",
+                    # "real_mdd",
+                    # "benchmark_returns",
+                    # "benchmark_cumulative_returns",
+                    # "benchmark_mdd",
+                ]
+            )
+            # Write the dashboard and logs to separate sheets
+            dashboard_df.to_excel(writer, sheet_name="Dashboard")
+            logs_df.to_excel(writer, sheet_name="Logs", index=False)
+
+    # Load the existing file
+    with pd.ExcelWriter(
+        file_path, engine="openpyxl", mode="a", if_sheet_exists="overlay"
+    ) as writer:
+        # Load the logs sheet to append new data
+        try:
+            df = pd.read_excel(file_path, sheet_name="Logs", engine="openpyxl")
+        except ValueError:
+            # If the "Logs" sheet doesn't exist, create it
+            df = pd.DataFrame(
+                columns=[
+                    "date",
+                    "open_price",
+                    "ma",
+                    "signal",
+                    "position",
+                    "buy_price",
+                    "sell_price",
+                    # "strategy_buy_price",
+                    # "strategy_sell_price",
+                    # "strategy_highest_price",
+                    # "real_buy_price",
+                    # "real_sell_price",
+                    # "real_highest_price",
+                    # "strategy_returns",
+                    # "strategy_cumulative_returns",
+                    # "strategy_mdd",
+                    # "real_returns",
+                    # "real_cumulative_returns",
+                    # "real_mdd",
+                    # "benchmark_returns",
+                    # "benchmark_cumulative_returns",
+                    # "benchmark_mdd",
+                ]
+            )
+        # Create a DataFrame for the new data
+        new_row_df = pd.DataFrame([new_data])
+
+        # Check if df is empty, if so, use the new_row_df as df
+        if df.empty:
+            df = new_row_df
+        else:
+            df = pd.concat([df, new_row_df], ignore_index=True)
+
+        # Save the updated logs back to the Excel file
+        df.to_excel(writer, sheet_name="Logs", index=False)
+
+    # Update the Dashboard
+    dashboard_df = pd.read_excel(file_path, sheet_name="Dashboard", index_col=0)
+
+    for key, values in dashboard_data.items():
+        if key in dashboard_df.index:
+            dashboard_df.loc[key, "Theoretical"] = values[0]
+            dashboard_df.loc[key, "Real"] = values[1]
+            dashboard_df.loc[key, "Benchmark"] = values[2]
+
+    # Write the updated dashboard back to the Excel file
+    with pd.ExcelWriter(
+        file_path, engine="openpyxl", mode="a", if_sheet_exists="replace"
+    ) as writer:
+        dashboard_df.to_excel(writer, sheet_name="Dashboard")
+
+
+def logging_on_excel_rsi(file_path, new_data, dashboard_data):
+    # Check if the Excel file exists
+    if not os.path.exists(file_path):
+        # If the file doesn't exist, create it with two sheets
+        with pd.ExcelWriter(file_path, engine="openpyxl") as writer:
+            # Create a DataFrame for the dashboard with the required rows and columns
+            dashboard_df = pd.DataFrame(
+                dashboard_data,
+                index=[
+                    "Total Return",
+                    "CAGR",
+                    "MDD",
+                    "Holding Days",
+                    "Investing Days",
+                ],
+                columns=["Theoretical", "Real", "Benchmark"],
+            )
+            # Create an empty DataFrame for the logs with the required columns
+            logs_df = pd.DataFrame(
+                columns=[
+                    "date",
+                    "open_price",
+                    "rsi",
+                    "highest_price",
+                    "signal",
+                    "position",
+                    "buy_price",
+                    "sell_price",
+                    # "strategy_buy_price",
+                    # "strategy_sell_price",
+                    # "strategy_highest_price",
+                    # "real_buy_price",
+                    # "real_sell_price",
+                    # "real_highest_price",
+                    # "strategy_returns",
+                    # "strategy_cumulative_returns",
+                    # "strategy_mdd",
+                    # "real_returns",
+                    # "real_cumulative_returns",
+                    # "real_mdd",
+                    # "benchmark_returns",
+                    # "benchmark_cumulative_returns",
+                    # "benchmark_mdd",
+                ]
+            )
+            # Write the dashboard and logs to separate sheets
+            dashboard_df.to_excel(writer, sheet_name="Dashboard")
+            logs_df.to_excel(writer, sheet_name="Logs", index=False)
+
+    # Load the existing file
+    with pd.ExcelWriter(
+        file_path, engine="openpyxl", mode="a", if_sheet_exists="overlay"
+    ) as writer:
+        # Load the logs sheet to append new data
+        try:
+            df = pd.read_excel(file_path, sheet_name="Logs", engine="openpyxl")
+        except ValueError:
+            # If the "Logs" sheet doesn't exist, create it
+            df = pd.DataFrame(
+                columns=[
+                    "date",
+                    "open_price",
+                    "rsi",
+                    "highest_price",
+                    "signal",
+                    "position",
+                    "buy_price",
+                    "sell_price",
+                    # "strategy_buy_price",
+                    # "strategy_sell_price",
+                    # "strategy_highest_price",
+                    # "real_buy_price",
+                    # "real_sell_price",
+                    # "real_highest_price",
+                    # "strategy_returns",
+                    # "strategy_cumulative_returns",
+                    # "strategy_mdd",
+                    # "real_returns",
+                    # "real_cumulative_returns",
+                    # "real_mdd",
+                    # "benchmark_returns",
+                    # "benchmark_cumulative_returns",
+                    # "benchmark_mdd",
+                ]
+            )
+        # Create a DataFrame for the new data
+        new_row_df = pd.DataFrame([new_data])
+
+        # Check if df is empty, if so, use the new_row_df as df
+        if df.empty:
+            df = new_row_df
+        else:
+            df = pd.concat([df, new_row_df], ignore_index=True)
+
+        # Save the updated logs back to the Excel file
+        df.to_excel(writer, sheet_name="Logs", index=False)
+
+    # Update the Dashboard
+    dashboard_df = pd.read_excel(file_path, sheet_name="Dashboard", index_col=0)
+
+    for key, values in dashboard_data.items():
+        if key in dashboard_df.index:
+            dashboard_df.loc[key, "Theoretical"] = values[0]
+            dashboard_df.loc[key, "Real"] = values[1]
+            dashboard_df.loc[key, "Benchmark"] = values[2]
+
+    # Write the updated dashboard back to the Excel file
+    with pd.ExcelWriter(
+        file_path, engine="openpyxl", mode="a", if_sheet_exists="replace"
+    ) as writer:
+        dashboard_df.to_excel(writer, sheet_name="Dashboard")
+
+
+# # Example usage
+# file_path = "machine_logs/test.xlsx"
+
+# new_data = {
+#     "date": "2024-08-31",
+#     "open_price": 101,
+#     "ma": 102,
+#     "signal": "Buy",
+#     "position": 1,
+#     "buy_price": 1,
+#     "sell_price": 1,
+#     "strategy_returns": 0.02,
+#     "strategy_cumulative_returns": 0.02,
+#     "strategy_mdd": -0.01,
+#     "real_returns": 0.018,
+#     "real_cumulative_returns": 0.045,
+#     "real_mdd": -0.012,
+# }
+
+# dashboard_data = {
+#     "Total Return": [0.12, 0.12],
+#     "CAGR": [0.27, 0.26],
+#     "MDD": [-0.02, -0.05],
+#     "Holding Days": [2, 2],
+#     "Investing Days": [200, 200],
+# }
+
+# logging_on_excel_ma(file_path, new_data, dashboard_data)
