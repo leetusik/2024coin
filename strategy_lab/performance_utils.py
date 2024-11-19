@@ -39,6 +39,10 @@ def get_mdd(df):
 
 
 def get_win_rate(df):
+    # Check if the 'position' column exists
+    if "position" not in df.columns:
+        return None
+
     # Initialize variables to track buy and win times
     buy_time = 0
     win_time = 0
@@ -70,6 +74,9 @@ def get_win_rate(df):
 
 
 def get_gain_loss_ratio(df):
+    # Check if the 'position' column exists
+    if "position" not in df.columns:
+        return None
     holding_period = False  # Track whether we're in a holding period
     start_returns = 0  # To store the returns at the start of the buy signal
     win_list = []
@@ -111,6 +118,9 @@ def get_gain_loss_ratio(df):
 
 
 def get_holding_time_ratio(df):
+    # Check if the 'position' column exists
+    if "position" not in df.columns:
+        return None
     # Step 1: Filter rows where there is no NaN in any column except 'highest_price' and 'exit_price'
     df_no_na_except_cols = df.dropna(
         subset=[col for col in df.columns if col not in ["highest_price", "exit_price"]]
@@ -166,7 +176,7 @@ def get_performance(df):
     # get gain loss ratio
     gain_loss_ratio = get_gain_loss_ratio(df)
 
-    if type(gain_loss_ratio) != str:
+    if type(gain_loss_ratio) != str and gain_loss_ratio != None:
         gain_loss_ratio = round(gain_loss_ratio, 2)
 
     # holding percent

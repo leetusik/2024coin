@@ -32,6 +32,7 @@
 - **Moving Averages**:
   - **MA5**: Calculated on the closing price with a 5-day window
   - **MA20**: Calculated on the closing price with a 20-day window
+- **sleepage**: 0.2% buy and sell
 
 ### 2. Trading Conditions
 
@@ -65,6 +66,7 @@
   - **MA5**: Calculated on the closing price with a 5-day window
     the last value of closing price is prediction. so at t4 is completed, the ma5(t5) is already created.
   - **MA20**: Calculated on the closing price with a 20-day window
+  - **sleepage**: 0.2% buy and sell
 
 - **LSTM Setting**
   - **features**: df_full[['open', 'high', 'low', 'close', 'volume_krw', 'volume_market', 'Daily Return']].values
@@ -89,3 +91,10 @@
   "investing_period": 2581
 }
 ```
+
+## concerns
+
+완성된 lstm 모델로 모델을 트레이닝할 때 사용한 트레이닝 기간에 대한 가격 예측도 포함하여 백테스트를 진행했기 때문에 overfitting 문제가 있을 수 있다.
+=-> 그래도 early stop옵션이 있기 때문에 엄청나게 오버트레이닝 되지는 않았을 듯.
+
+마지막 value만 predict를 할 게 아니라 ma를 구해놓고 지난 ma + 다른 features로 predicted ma를 구하면 되는 것이 아닌가. 뭐 큰 차이는 없겠다만

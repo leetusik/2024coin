@@ -54,7 +54,6 @@ def get_candles(
     times = times[1:]
 
     lst = []
-    rate_limit_interval = 1 / 20  # Time in seconds to wait between requests
     for t in times:
         url = f"https://api.upbit.com/v1/candles/{interval}/{interval2}?market={market}&count={count}&to={t}"
         headers = {"accept": "application/json"}
