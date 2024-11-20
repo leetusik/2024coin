@@ -41,7 +41,7 @@ def get_mdd(df):
 def get_win_rate(df):
     # Check if the 'position' column exists
     if "position" not in df.columns:
-        return None
+        return None, None, None
 
     # Initialize variables to track buy and win times
     buy_time = 0
@@ -70,7 +70,7 @@ def get_win_rate(df):
     else:
         win_rate = 0
 
-    return win_rate
+    return win_rate, buy_time, win_time
 
 
 def get_gain_loss_ratio(df):
@@ -145,6 +145,24 @@ def get_holding_time_ratio(df):
     return position_time_ratio_except_cols
 
 
+def get_sharpe_ratio(df, risk_free_rate=0.02):
+    # Calculate daily returns
+    daily_returns = df["cumulative_returns2"].pct_change()
+
+    # Calculate excess returns (over risk-free rate)
+    excess_returns = daily_returns - (
+        risk_free_rate / 365
+    )  # Convert annual risk-free rate to daily
+
+    # Calculate annualized Sharpe ratio using 365 days for crypto
+    if daily_returns.std() != 0:
+        sharpe_ratio = np.sqrt(365) * (excess_returns.mean() / daily_returns.std())
+    else:
+        sharpe_ratio = 0
+
+    return float(sharpe_ratio)
+
+
 def get_performance(df):
     # get total return
     initial_value = df["cumulative_returns2"].iloc[1]
@@ -171,7 +189,7 @@ def get_performance(df):
     mdd = get_mdd(df)
 
     # get win rate
-    win_rate = get_win_rate(df)
+    win_rate, buy_time, win_time = get_win_rate(df)
 
     # get gain loss ratio
     gain_loss_ratio = get_gain_loss_ratio(df)
@@ -182,12 +200,18 @@ def get_performance(df):
     # holding percent
     holding_time_ratio = get_holding_time_ratio(df)
 
+    # get sharpe ratio
+    sharpe_ratio = get_sharpe_ratio(df)
+
     return {
         "total_return": tr,
         "cagr": cagr,
         "mdd": mdd,
         "win_rate": win_rate,
+        "buy_time": buy_time,
+        "win_time": win_time,
         "gain_loss_ratio": gain_loss_ratio,
         "holding_time_ratio": holding_time_ratio,
         "investing_period": days,
+        "sharpe_ratio": sharpe_ratio,
     }
